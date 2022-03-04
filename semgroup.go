@@ -90,11 +90,7 @@ func (e multiError) Error() string {
 }
 
 func (e multiError) ErrorOrNil() error {
-	if e == nil {
-		return nil
-	}
-
-	if len(e) == 0 {
+	if e == nil || len(e) == 0 {
 		return nil
 	}
 
