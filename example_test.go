@@ -14,7 +14,7 @@ import (
 // at any time.
 func ExampleGroup_parallel() {
 	const maxWorkers = 2
-	s := semgroup.NewGroup(context.Background(), 2)
+	s := semgroup.NewGroup(context.Background(), maxWorkers)
 
 	var (
 		counter int
@@ -47,7 +47,7 @@ func ExampleGroup_parallel() {
 
 func ExampleGroup_withErrors() {
 	const maxWorkers = 2
-	s := semgroup.NewGroup(context.Background(), 2)
+	s := semgroup.NewGroup(context.Background(), maxWorkers)
 
 	visitors := []int{1, 1, 1, 1, 2, 2, 1, 1, 2}
 
