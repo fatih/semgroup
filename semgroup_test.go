@@ -70,3 +70,17 @@ func TestGroup_multiple_tasks_errors(t *testing.T) {
 		t.Errorf("error should be:\n%s\ngot:\n%s\n", wantErr, err.Error())
 	}
 }
+
+func TestGroup_deadlock(t *testing.T) {
+	canceledCtx, cancel := context.WithCancel(context.Background())
+	cancel()
+	g := NewGroup(canceledCtx, 1)
+
+	g.Go(func() error { return nil })
+	g.Go(func() error { return nil })
+
+	err := g.Wait()
+	if err != nil {
+		t.Fatalf("g.Wait() should not return an error")
+	}
+}
