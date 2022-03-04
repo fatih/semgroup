@@ -12,7 +12,7 @@ import (
 // This example increases a counter for each visit concurrently, using a
 // SemGroup to block until all the visitors have finished. It only runs 2 tasks
 // at any time.
-func ExampleSemGroup() {
+func ExampleGroup_parallel() {
 	const maxWorkers = 2
 	s := semgroup.NewGroup(context.Background(), 2)
 
@@ -45,7 +45,7 @@ func ExampleSemGroup() {
 	// Counter: 38
 }
 
-func ExampleSemGroup_with_errors() {
+func ExampleGroup_withErrors() {
 	const maxWorkers = 2
 	s := semgroup.NewGroup(context.Background(), 2)
 
