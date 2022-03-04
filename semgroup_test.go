@@ -62,7 +62,7 @@ func TestGroup_multiple_tasks_errors(t *testing.T) {
 		t.Fatalf("g.Wait() should return an error")
 	}
 
-	wantErr := `2 error(s) occured:
+	wantErr := `2 error(s) occurred:
 * foo
 * bar`
 
