@@ -1,0 +1,34 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  ci:
+    name: "Go build"
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.17
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+      
+    - name: Test
+      run: |
+        go mod tidy -v
+        go test -race ./...
+
+    - run: "go vet ./..."
+
+    - name: Staticcheck
+      uses: dominikh/staticcheck-action@v1.1.0
+      with:
+        version: "2021.1.1"
+        install-go: false
+
+    - name: Build
+      run: go build ./...
