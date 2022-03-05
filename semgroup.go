@@ -44,12 +44,16 @@ func NewGroup(ctx context.Context, maxWorkers int64) *Group {
 // On success, returns nil. On failure, returns ctx.Err() and leaves the
 // semaphore unchanged. Any function call to return a non-nil error is
 // accumulated; th accumulated errors will be returned by Wait.
-func (g *Group) Go(f func() error) error {
+func (g *Group) Go(f func() error) {
 	g.wg.Add(1)
 
 	err := g.sem.Acquire(g.ctx, 1)
 	if err != nil {
-		return fmt.Errorf("couldn't acquire semaphore: %s", err)
+		g.wg.Done()
+		g.mu.Lock()
+		g.errs = append(g.errs, fmt.Errorf("couldn't acquire semaphore: %s", err))
+		g.mu.Unlock()
+		return
 	}
 
 	go func() {
@@ -62,8 +66,6 @@ func (g *Group) Go(f func() error) error {
 			g.mu.Unlock()
 		}
 	}()
-
-	return nil
 }
 
 // Wait blocks until all function calls from the Go method have returned, then
