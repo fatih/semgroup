@@ -68,7 +68,7 @@ func ExampleGroup_withErrors() {
 	}
 
 	// Output:
-	// 3 error(s) occured:
+	// 3 error(s) occurred:
 	// * only one visitor is allowed
 	// * only one visitor is allowed
 	// * only one visitor is allowed

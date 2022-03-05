@@ -34,7 +34,7 @@ func main() {
 	for _, v := range visitors {
 		v := v
 
-		_ = s.Go(func() error {
+		s.Go(func() error {
 			fmt.Println("Visits: ", v)
 			return nil
 		})
@@ -79,7 +79,7 @@ func main() {
 	for _, v := range visitors {
 		v := v
 
-		_ = s.Go(func() error {
+		s.Go(func() error {
 			if v != 1 {
 				return errors.New("only one visitor is allowed")
 			}
@@ -93,7 +93,7 @@ func main() {
 	}
 
 	// Output:
-	// 3 error(s) occured:
+	// 3 error(s) occurred:
 	// * only one visitor is allowed
 	// * only one visitor is allowed
 	// * only one visitor is allowed
