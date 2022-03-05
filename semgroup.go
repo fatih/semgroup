@@ -79,7 +79,7 @@ type multiError []error
 
 func (e multiError) Error() string {
 	var b strings.Builder
-	fmt.Fprintf(&b, "%d error(s) occured:\n", len(e))
+	fmt.Fprintf(&b, "%d error(s) occurred:\n", len(e))
 
 	for i, err := range e {
 		fmt.Fprintf(&b, "* %s", err.Error())
@@ -92,10 +92,6 @@ func (e multiError) Error() string {
 }
 
 func (e multiError) ErrorOrNil() error {
-	if e == nil {
-		return nil
-	}
-
 	if len(e) == 0 {
 		return nil
 	}
