@@ -80,7 +80,14 @@ func TestGroup_deadlock(t *testing.T) {
 	g.Go(func() error { return nil })
 
 	err := g.Wait()
-	if err != nil {
-		t.Fatalf("g.Wait() should not return an error")
+	if err == nil {
+		t.Fatalf("g.Wait() should return an error")
+	}
+
+	wantErr := `1 error(s) occured:
+* couldn't acquire semaphore: context canceled`
+
+	if wantErr != err.Error() {
+		t.Errorf("error should be:\n%s\ngot:\n%s\n", wantErr, err.Error())
 	}
 }
