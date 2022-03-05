@@ -21,21 +21,20 @@ package main
 import (
 	"context"
 	"fmt"
-	"sync"
 
 	"github.com/fatih/semgroup"
 )
 
 func main() {
 	const maxWorkers = 2
-	s := semgroup.NewGroup(context.Background(), 2)
+	s := semgroup.NewGroup(context.Background(), maxWorkers)
 
 	visitors := []int{5, 2, 10, 8, 9, 3, 1}
 
 	for _, v := range visitors {
 		v := v
 
-		s.Go(func() error {
+		_ = s.Go(func() error {
 			fmt.Println("Visits: ", v)
 			return nil
 		})
@@ -65,22 +64,22 @@ package main
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"sync"
 
 	"github.com/fatih/semgroup"
 )
 
 func main() {
 	const maxWorkers = 2
-	s := semgroup.NewGroup(context.Background(), 2)
+	s := semgroup.NewGroup(context.Background(), maxWorkers)
 
 	visitors := []int{1, 1, 1, 1, 2, 2, 1, 1, 2}
 
 	for _, v := range visitors {
 		v := v
 
-		s.Go(func() error {
+		_ = s.Go(func() error {
 			if v != 1 {
 				return errors.New("only one visitor is allowed")
 			}
