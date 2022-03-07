@@ -10,6 +10,7 @@ package semgroup
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -97,4 +98,22 @@ func (e multiError) ErrorOrNil() error {
 	}
 
 	return e
+}
+
+func (e multiError) Is(target error) bool {
+	for _, err := range e {
+		if errors.Is(err, target) {
+			return true
+		}
+	}
+	return false
+}
+
+func (e multiError) As(target interface{}) bool {
+	for _, err := range e {
+		if errors.As(err, target) {
+			return true
+		}
+	}
+	return false
 }
