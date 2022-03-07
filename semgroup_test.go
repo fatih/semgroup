@@ -91,3 +91,36 @@ func TestGroup_deadlock(t *testing.T) {
 		t.Errorf("error should be:\n%s\ngot:\n%s\n", wantErr, err.Error())
 	}
 }
+
+func TestGroup_multiple_tasks_errors_Is(t *testing.T) {
+	ctx := context.Background()
+	g := NewGroup(ctx, 1)
+
+	var (
+		fooErr = errors.New("foo")
+		barErr = errors.New("bar")
+		bazErr = errors.New("baz")
+	)
+
+	g.Go(func() error { return fooErr })
+	g.Go(func() error { return nil })
+	g.Go(func() error { return barErr })
+	g.Go(func() error { return nil })
+
+	err := g.Wait()
+	if err == nil {
+		t.Fatalf("g.Wait() should return an error")
+	}
+
+	if !errors.Is(err, fooErr) {
+		t.Errorf("error should be contained %v\n", fooErr)
+	}
+
+	if !errors.Is(err, barErr) {
+		t.Errorf("error should be contained %v\n", barErr)
+	}
+
+	if errors.Is(err, bazErr) {
+		t.Errorf("error should not be contained %v\n", bazErr)
+	}
+}
