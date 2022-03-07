@@ -108,3 +108,12 @@ func (e multiError) Is(target error) bool {
 	}
 	return false
 }
+
+func (e multiError) As(target interface{}) bool {
+	for _, err := range e {
+		if errors.As(err, target) {
+			return true
+		}
+	}
+	return false
+}

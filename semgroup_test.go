@@ -3,6 +3,7 @@ package semgroup
 import (
 	"context"
 	"errors"
+	"os"
 	"sync"
 	"testing"
 )
@@ -122,5 +123,37 @@ func TestGroup_multiple_tasks_errors_Is(t *testing.T) {
 
 	if errors.Is(err, bazErr) {
 		t.Errorf("error should not be contained %v\n", bazErr)
+	}
+}
+
+type foobarErr struct{ str string }
+
+func (e foobarErr) Error() string {
+	return "foobar"
+}
+
+func TestGroup_multiple_tasks_errors_As(t *testing.T) {
+	ctx := context.Background()
+	g := NewGroup(ctx, 1)
+
+	g.Go(func() error { return foobarErr{"baz"} })
+	g.Go(func() error { return nil })
+
+	err := g.Wait()
+	if err == nil {
+		t.Fatalf("g.Wait() should return an error")
+	}
+
+	var (
+		fbe foobarErr
+		pe  *os.PathError
+	)
+
+	if !errors.As(err, &fbe) {
+		t.Error("error should be matched foobarErr")
+	}
+
+	if errors.As(err, &pe) {
+		t.Error("error should not be matched os.PathError")
 	}
 }
