@@ -43,7 +43,7 @@ func NewGroup(ctx context.Context, maxWorkers int64) *Group {
 
 // On success, returns nil. On failure, returns ctx.Err() and leaves the
 // semaphore unchanged. Any function call to return a non-nil error is
-// accumulated; th accumulated errors will be returned by Wait.
+// accumulated; the accumulated errors will be returned by Wait.
 func (g *Group) Go(f func() error) {
 	g.wg.Add(1)
 
