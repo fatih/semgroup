@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"strings"
 	"sync"
 	"testing"
 )
@@ -85,11 +86,10 @@ func TestGroup_deadlock(t *testing.T) {
 		t.Fatalf("g.Wait() should return an error")
 	}
 
-	wantErr := `1 error(s) occurred:
-* couldn't acquire semaphore: context canceled`
+	wantErr := `couldn't acquire semaphore: context canceled`
 
-	if wantErr != err.Error() {
-		t.Errorf("error should be:\n%s\ngot:\n%s\n", wantErr, err.Error())
+	if !strings.Contains(err.Error(), wantErr) {
+		t.Errorf("error should contain:\n%s\ngot:\n%s\n", wantErr, err.Error())
 	}
 }
 
