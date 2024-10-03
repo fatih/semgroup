@@ -62,6 +62,9 @@ func TestGroup_multiple_tasks_errors(t *testing.T) {
 	if err == nil {
 		t.Fatalf("g.Wait() should return an error")
 	}
+	if !errors.As(err, &MultiError{}) {
+		t.Fatalf("the error should be of type MultiError")
+	}
 
 	wantErr := `2 error(s) occurred:
 * foo
@@ -123,6 +126,15 @@ func TestGroup_multiple_tasks_errors_Is(t *testing.T) {
 
 	if errors.Is(err, bazErr) {
 		t.Errorf("error should not be contained %v\n", bazErr)
+	}
+
+	var gotMultiErr MultiError
+	if !errors.As(err, &gotMultiErr) {
+		t.Fatalf("error should be matched MultiError")
+	}
+	expectedErr := (MultiError{fooErr, barErr}).Error()
+	if gotMultiErr.Error() != expectedErr {
+		t.Errorf("error should be %q, got %q", expectedErr, gotMultiErr.Error())
 	}
 }
 
